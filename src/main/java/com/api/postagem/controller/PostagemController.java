@@ -18,11 +18,6 @@ public class PostagemController {
     @Autowired
     PostagemServices postagemServices;
 
-    @RequestMapping("/")
-    public String home(){
-        return "Pagina inicial";
-    }
-
 
     @GetMapping(value = "/postagem/listar")
     public ResponseEntity<?> listarPostagens(){
@@ -42,6 +37,7 @@ public class PostagemController {
 
     @DeleteMapping(value = "/postagem/deletar/{id}")
     public ResponseEntity<?> deletarPostagem(@PathVariable("id") long id){
+        postagemRepository.deleteById(id);
         return new ResponseEntity<>("Removido com sucesso", HttpStatus.OK);
     }
 

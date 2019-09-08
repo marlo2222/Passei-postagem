@@ -3,8 +3,6 @@ package com.api.postagem.services;
 import com.api.postagem.models.Postagem;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
