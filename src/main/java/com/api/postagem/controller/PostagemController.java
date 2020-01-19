@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/postagem")
 @Api(value = "API de favoritos")
 public class PostagemController {
 
@@ -21,6 +21,11 @@ public class PostagemController {
     @Autowired
     PostagemServices postagemServices;
 
+    @GetMapping(value = "/")
+    @ApiOperation(value = "retorna uma string")
+    public String home(){
+        return "Deu certo";
+    }
 
     @GetMapping(value = "/postagem")
     @ApiOperation(value = "retorna uma lista de postagem")
