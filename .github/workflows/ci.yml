@@ -66,3 +66,12 @@ jobs:
       with:
         name: Testes de Mutação
         path: ./target/pit-reports
+        
+  security-test:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Horusec Scan
+    steps:
+      - name: Run Horusec
+        id: run_horusec
+        uses: fike/horusec-action@v0.1
