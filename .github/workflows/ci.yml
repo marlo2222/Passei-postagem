@@ -31,3 +31,18 @@ jobs:
         java-version: 11
     - name: Run unit Test
       run: mvn clean test
+      
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Lint Code
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Lint Code
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        DEFAULT_BRANCH: master
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_JAVA: true
