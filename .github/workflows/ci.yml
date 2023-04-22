@@ -76,7 +76,7 @@ jobs:
         id: run_horusec
         uses: fike/horusec-action@v0.1
   
-  perfomrnace testing:
+  perfomrnace-testing:
     needs: build
     runs-on: ubuntu-latest
     name: performance testing
