@@ -66,7 +66,7 @@ jobs:
       with:
         name: Testes de Mutação
         path: ./target/pit-reports
-        
+
   security-test:
     needs: build
     runs-on: ubuntu-latest
@@ -75,3 +75,23 @@ jobs:
       - name: Run Horusec
         id: run_horusec
         uses: fike/horusec-action@v0.1
+  
+  performance-test: 
+    name: performance testting - smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: step 1 - checkout
+        uses: actions/checkout@v3
+
+      - name: step 2 - run k6 load test
+        uses: grafana/k6-action@v0.2.0
+        with: 
+          filename: performance/script.js
+
+      - run: ls & mkdir report & mv index.html report
+      
+      - name: step 3 - upload artifact
+        uses: actions/upload-artifact@v3
+        with: 
+          name: relatorio de testes de performance
+          path: report
