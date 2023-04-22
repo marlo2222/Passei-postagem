@@ -96,7 +96,6 @@
 	</dependencyManagement>
 
 	<build>
-		
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -117,7 +116,26 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<targetClasses>
+						<param>com.api.postagem.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.api.postagem.*</param>
+					</targetTests>
+					<mutators>
+						<mutator>NON_VOID_METHOD_CALLS</mutator>
+						<mutator>RETURN_VALS</mutator>
+					</mutators>
+					<avoidCallsTo>
+						<avoidCallsTo>org.slf4j</avoidCallsTo>
+					</avoidCallsTo>
+				</configuration>
+			 </plugin>
 		</plugins>
 	</build>
 

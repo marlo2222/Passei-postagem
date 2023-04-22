@@ -3,15 +3,12 @@ package com.api.postagem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.api.postagem.models.Comentario;
 import com.api.postagem.models.Postagem;
 import com.api.postagem.repository.PostagemRepository;
 

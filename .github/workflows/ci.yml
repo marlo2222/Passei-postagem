@@ -31,11 +31,11 @@ jobs:
         java-version: 11
     - name: Run unit Test
       run: mvn clean test
-      
+
   lint:
     needs: build
     runs-on: ubuntu-latest
-    name: Lint Code
+    name: lint Code
     steps:
     - uses: actions/checkout@v2
 
@@ -46,3 +46,23 @@ jobs:
         DEFAULT_BRANCH: master
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         VALIDATE_JAVA: true
+
+  mutation-test:
+    needs: build
+    runs-on: ubuntu-latest
+    name: mutation test
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Run mutation Test
+      run: mvn clean test-compile org.pitest:pitest-maven:mutationCoverage
+    
+    - name: Enviar resultados dos testes de mutação
+      uses: actions/upload-artifact@v2
+      with:
+        name: Testes de Mutação
+        path: ./target/pit-reports
