@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Build project
+      run: mvn -B package -DskipTests --file pom.xml
+
+  unit-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Run unit Test
+      run: mvn clean test
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    name: lint Code
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Lint Code
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        DEFAULT_BRANCH: master
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_JAVA: true
+
+  mutation-test:
+    needs: build
+    runs-on: ubuntu-latest
+    name: mutation test
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Run mutation Test
+      run: mvn clean test-compile org.pitest:pitest-maven:mutationCoverage
+    
+    - name: Enviar resultados dos testes de mutação
+      uses: actions/upload-artifact@v2
+      with:
+        name: Testes de Mutação
+        path: ./target/pit-reports
+  
+  build-image:
+    needs: [unit-test, mutation-test, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: clean install
+        run: mvn clean install
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: user/app:latest
+  
+  deploy-image:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando deploy
+
+  performance-test:
+    needs: deploy-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando teste de performance
+
+  integration-test:
+    needs: deploy-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando teste de integração
+    

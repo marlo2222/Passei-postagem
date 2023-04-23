@@ -21,10 +21,6 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -78,6 +74,10 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -92,7 +92,6 @@
 	</dependencyManagement>
 
 	<build>
-		
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -113,7 +112,26 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<targetClasses>
+						<param>com.api.postagem.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.api.postagem.*</param>
+					</targetTests>
+					<mutators>
+						<mutator>NON_VOID_METHOD_CALLS</mutator>
+						<mutator>RETURN_VALS</mutator>
+					</mutators>
+					<avoidCallsTo>
+						<avoidCallsTo>org.slf4j</avoidCallsTo>
+					</avoidCallsTo>
+				</configuration>
+			 </plugin>
 		</plugins>
 	</build>
 
