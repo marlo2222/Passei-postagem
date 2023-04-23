@@ -66,18 +66,9 @@ jobs:
       with:
         name: Testes de Mutação
         path: ./target/pit-reports
-
-  security-test:
-    needs: build
-    runs-on: ubuntu-latest
-    name: Horusec Scan
-    steps:
-      - name: Run Horusec
-        id: run_horusec
-        uses: fike/horusec-action@v0.1
   
   build-image:
-    needs: [unit-test, mutation-test]
+    needs: [unit-test, mutation-test, lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -107,5 +98,22 @@ jobs:
         with:
           push: true
           tags: user/app:latest
-    
+  
+  deploy-image:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando deploy
+
+  performance-test:
+    needs: deploy-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando teste de performance
+
+  integration-test:
+    needs: deploy-image
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo realizando teste de integração
     
